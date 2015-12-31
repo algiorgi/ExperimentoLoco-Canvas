@@ -17,7 +17,8 @@ function Copo(posicionX, posicionY, radio, color) {
 	this.posicionY = posicionY;
 	this.radio = radio;
 	this.color = color;
-
+	
+	//METODOS
 	this.caer = function() {
 		
 		this.posicionY = this.posicionY + 1;
@@ -25,7 +26,7 @@ function Copo(posicionX, posicionY, radio, color) {
 
 	this.resetearPosicion = function() {
 		
-		this.posicionY = 0;
+		this.posicionY = POS_Y_INICIAL;
 	}	
 }
 
