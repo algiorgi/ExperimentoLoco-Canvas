@@ -1,35 +1,57 @@
-//OBJETOS
-function Copo(radio, color) {
+// ------------- OBJETOS -------------
+function Copo(posicionX, posicionY, radio, color) {
 	
 	//ATRIBUTOS
+	this.posicionX = posicionX;
+	this.posicionY = posicionY;
 	this.radio = radio;
 	this.color = color; 
 }
 
 
-//VARIABLES
-var canvas, contexto, copo;
+// ------------- MAIN -------------
+var canvas, contexto, copos = [];
 
-canvas = document.getElementById( 'canvasId' );
-contexto =  canvas.getContext( '2d' );
+inicializar();
+crearCopos();
 
-copo = new Copo(3, 'black');
-copo.x = 10;
-copo.y = 10;
+for (i = 0; i < copos.length; i++) {
+	dibujar(copos[i]);
+}
 
-dibujar(copo);	
 
-otroCopo = new Copo(5, 'blue');
-otroCopo.x = 20;
-otroCopo.y = 10;
 
-dibujar(otroCopo);
+// ------------- FUNCIONES -------------
 
-//FUNCIONES
+//Obtiene el canvas y el contexto
+function inicializar() {
+	
+	canvas = document.getElementById( 'canvasId' );
+	canvas.width = 320;
+	canvas.height = 500;
+	
+	contexto =  canvas.getContext( '2d' );
+}
+
+//Crea algunos copos y los guarda en el array de copos
+function crearCopos() {
+	
+	var radio = 3;
+	var negro = 'black';
+	
+	copos.push( new Copo(10, 10, radio, negro) );
+	copos.push( new Copo(35, 10, radio, negro) );
+	copos.push( new Copo(70, 10, radio, negro) );
+	copos.push( new Copo(150, 10, radio, negro) );
+	copos.push( new Copo(220, 10, radio, negro) );
+	copos.push( new Copo(300, 10, radio, negro) );	
+}
+
+//Dibuja un copo
 function dibujar(copo) {
 		
 	contexto.beginPath();
-	contexto.arc(copo.x, copo.y, copo.radio, 0 , 2 * Math.PI);
+	contexto.arc(copo.posicionX, copo.posicionY, copo.radio, 0 , 2 * Math.PI);
 	contexto.fillStyle = copo.color;
 	contexto.fill();	
 	
