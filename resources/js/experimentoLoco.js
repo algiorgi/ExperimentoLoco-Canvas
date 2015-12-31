@@ -1,3 +1,14 @@
+window.requestAnimFrame = (function(){
+      return  window.requestAnimationFrame       || 
+              window.webkitRequestAnimationFrame || 
+              window.mozRequestAnimationFrame    || 
+              window.oRequestAnimationFrame      || 
+              window.msRequestAnimationFrame     || 
+              function(/* function */ callback, /* DOMElement */ element){
+                window.setTimeout(callback, 1000 / 60);
+              };
+    })();
+
 // ------------- OBJETOS -------------
 function Copo(posicionX, posicionY, radio, color) {
 	
@@ -9,17 +20,20 @@ function Copo(posicionX, posicionY, radio, color) {
 }
 
 
+// ------------- CONSTANTES Y VARIABLES -------------
+const DELTA_TIME = 1 / 60; // En teoria es el delta entre cada llamada. O al menos es lo que intento declarar
+const POS_Y_INICIAL = 10; // Desde esta altura van a caer todos los copos
+const CANTIDAD_MAXIMA_DE_COPOS = 10; // Es la cantidad maxima de copos en pantalla
+const  TIEMPO_ESPERA_PARA_CREAR_COPOS = 1.5; // Tiempo de espera para crear un copo nuevo
+const RADIO_COPO = 3;
+const COLOR_COPO = 'black';
+
+var canvas, contexto, copos = [], cronometro = 0, cantidadDeCopos = 0;
+
+
 // ------------- MAIN -------------
-var canvas, contexto, copos = [];
-
 inicializar();
-crearCopos();
-
-for (i = 0; i < copos.length; i++) {
-	dibujar(copos[i]);
-}
-
-
+loop();
 
 // ------------- FUNCIONES -------------
 
@@ -33,18 +47,36 @@ function inicializar() {
 	contexto =  canvas.getContext( '2d' );
 }
 
+//Esta funcion se llama con un fmr de 60 ( 1000 / 60 )
+function loop() {
+	
+	requestAnimFrame(loop) //Se le pasa como callback la misma funcion y la va llamando 60 veces por segundo... en teoria
+	crearCopos();
+	
+	for (i = 0; i < copos.length; i++) {
+		dibujar(copos[i]);
+	}
+}
+
 //Crea algunos copos y los guarda en el array de copos
 function crearCopos() {
 	
-	var radio = 3;
-	var negro = 'black';
+	if (cronometro > TIEMPO_ESPERA_PARA_CREAR_COPOS && cantidadDeCopos < CANTIDAD_MAXIMA_DE_COPOS) {
+		
+		var x = numeroAleatorioEntre(0, canvas.width);
+		copos.push( new Copo(x, POS_Y_INICIAL, RADIO_COPO, COLOR_COPO) );	
+		cantidadDeCopos++;
+		cronometro = 0;
+	}
 	
-	copos.push( new Copo(10, 10, radio, negro) );
-	copos.push( new Copo(35, 10, radio, negro) );
-	copos.push( new Copo(70, 10, radio, negro) );
-	copos.push( new Copo(150, 10, radio, negro) );
-	copos.push( new Copo(220, 10, radio, negro) );
-	copos.push( new Copo(300, 10, radio, negro) );	
+	cronometro = cronometro + DELTA_TIME;	
+	
+}
+
+//Retorna un numero aleatorio entre un minimo y un maximo
+function numeroAleatorioEntre(min, max) {
+	
+	return Math.floor(Math.random() * (max - min)) + min;	
 }
 
 //Dibuja un copo
