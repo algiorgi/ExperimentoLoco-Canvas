@@ -16,7 +16,17 @@ function Copo(posicionX, posicionY, radio, color) {
 	this.posicionX = posicionX;
 	this.posicionY = posicionY;
 	this.radio = radio;
-	this.color = color; 
+	this.color = color;
+
+	this.caer = function() {
+		
+		this.posicionY = this.posicionY + 1;
+	}
+
+	this.resetearPosicion = function() {
+		
+		this.posicionY = 0;
+	}	
 }
 
 
@@ -53,9 +63,7 @@ function loop() {
 	requestAnimFrame(loop) //Se le pasa como callback la misma funcion y la va llamando 60 veces por segundo... en teoria
 	crearCopos();
 	
-	for (i = 0; i < copos.length; i++) {
-		dibujar(copos[i]);
-	}
+	redibujarPantalla();
 }
 
 //Crea algunos copos y los guarda en el array de copos
@@ -77,6 +85,25 @@ function crearCopos() {
 function numeroAleatorioEntre(min, max) {
 	
 	return Math.floor(Math.random() * (max - min)) + min;	
+}
+
+//Vuelve a dibujar la pantalla
+function redibujarPantalla() {
+
+	contexto.clearRect(0, 0, canvas.width, canvas.height);
+	
+	for (i = 0; i < copos.length; i++) {
+	
+		copo = copos[i];
+		copo.caer();
+		dibujar(copo);
+		
+		if (copo.posicionY > canvas.height) {
+			
+			copo.resetearPosicion();
+		}
+	}
+
 }
 
 //Dibuja un copo
